@@ -14,6 +14,7 @@ The implementation supports running with the SoftDevice. This is automatically h
 ### Limitations
 - Logging output from littlefs can only be achieved with RTT, not UART.
 - This implementation has currently only been tested on the nRF52840-DK, with the SoftDevice S140 present, on nRF5 SDK v17.0.2.
+- Implementation can be considered as still in work in progress
 - This implementation, unlike fstorage, is synchronous.
 
 ## Usage
@@ -25,6 +26,8 @@ This section discusses how to configure this API for your project. The repositor
 The direct dependencies from the nRF5 SDK are fstorage, mem_manager (when not using static memory), app_error for asserts, and Segger RTT for logging (which is only configured if `NRF_LOG_ENABLED` and `NRF_LOG_BACKEND_RTT_ENABLED`) are defined in your project.
 
 ### Defines
+One **mandatory** define in your project is `LFS_CONFIG`, and it must be set to `lfs_nrf52_config.h`. To clarify, `-DLFS_CONFIG=lfs_nrf52_config.h`.
+
 These defines are used to configure the littlefs API.
 | Define                        | Default                |
 | -----------                   | --------               |
