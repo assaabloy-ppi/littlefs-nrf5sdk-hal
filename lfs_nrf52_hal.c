@@ -219,10 +219,10 @@ static int lfs_api_prog(const struct lfs_config *c,
     {
         wait_for_flash();
         wait_for_cb();
+        err = flash_op_ret;
+        flash_op_ret = LFS_NRF52_ERR_WAIT_VALUE;
     }
-    int ret = (flash_op_ret > NRF_SUCCESS) ? (-flash_op_ret) : LFS_ERR_OK;
-    flash_op_ret = LFS_NRF52_ERR_WAIT_VALUE;
-    return errno_to_lfs(ret);
+    return errno_to_lfs(err);
 }
 
 static int lfs_api_erase(const struct lfs_config *c, lfs_block_t block)
@@ -236,10 +236,10 @@ static int lfs_api_erase(const struct lfs_config *c, lfs_block_t block)
     {
         wait_for_flash();
         wait_for_cb();
+        err = flash_op_ret;
+        flash_op_ret = LFS_NRF52_ERR_WAIT_VALUE;
     }
-    int ret = (flash_op_ret != NRF_SUCCESS) ? (-flash_op_ret) : LFS_ERR_OK;
-    flash_op_ret = LFS_NRF52_ERR_WAIT_VALUE;
-    return errno_to_lfs(ret);
+    return errno_to_lfs(err);
 }
 
 static int lfs_api_sync(const struct lfs_config *c)

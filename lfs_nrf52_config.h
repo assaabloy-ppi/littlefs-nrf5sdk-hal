@@ -18,6 +18,7 @@
 #include <stdbool.h>
 #include <string.h>
 #include <inttypes.h>
+#include "sdk_config.h"
 
 #ifndef LFS_NO_MALLOC
 #include "mem_manager.h"
