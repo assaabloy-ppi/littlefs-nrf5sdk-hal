@@ -34,7 +34,7 @@ These defines are used to configure the littlefs HAL.
 | LFS_NRF5_START_ADDR  | 0x3e000                |
 | LFS_NRF5_END_ADDR    | 0x3ffff                |
 
-Keep in mind that it is the user's responsibility to ensure that the address range is valid. This should depend on how much storage space you want to allocate for your file system, the size of your flash storage, application, and your potential usage of a bootloader and the a SoftDevice.
+Keep in mind that it is the user's responsibility to ensure that the address range is valid. This should depend on how much storage space you want to allocate for your file system, the size of your flash storage, application, and your potential usage of a bootloader and the SoftDevice.
 
 ## Contributing
 Submit a pull request to this repository to contribute to the project.
