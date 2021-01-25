@@ -28,7 +28,6 @@
 
 #include "lfs_nrf52_hal.h"
 #include "lfs.h"
-#include "fds_example.h"
 
 /*======= Local Macro Definitions ===========================================*/
 

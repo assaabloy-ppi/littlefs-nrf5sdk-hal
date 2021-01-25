@@ -2,7 +2,8 @@ PROJECT_NAME     := flash_fds_s140_pca10056
 TARGETS          := nrf52840_xxaa
 OUTPUT_DIRECTORY := _build
 
-SDK_ROOT := ../../../../../../..
+# Replace with your own SDK path
+SDK_ROOT := /Users/tsonono/Downloads/nRF5_SDK_17.0.2_d674dde
 PROJ_DIR := ../../../..
 
 $(OUTPUT_DIRECTORY)/nrf52840_xxaa.out: \
@@ -54,13 +55,13 @@ SRC_FILES += \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_rtt.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_serial.c \
   $(PROJ_DIR)/lfs_nrf52_hal.c \
-  $(PROJ_DIR)/littlefs-2.4.0/lfs.c \
+  $(PROJ_DIR)/littlefs/lfs.c \
   $(SDK_ROOT)/components/libraries/mem_manager/mem_manager.c \
 
 # Include folders common to all targets
 INC_FOLDERS += \
   $(PROJ_DIR) \
-  $(PROJ_DIR)/littlefs-2.4.0 \
+  $(PROJ_DIR)/littlefs \
   $(SDK_ROOT)/external/segger_rtt \
   $(SDK_ROOT)/modules/nrfx/mdk \
   $(SDK_ROOT)/components/libraries/scheduler \
