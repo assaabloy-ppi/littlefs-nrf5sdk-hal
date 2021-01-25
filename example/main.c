@@ -84,7 +84,7 @@ int main(void)
     APP_ERROR_CHECK(NRF_LOG_INIT(NULL));
     NRF_LOG_DEFAULT_BACKENDS_INIT();
 
-    littlefs_nrf52_init(&cfg, NULL);
+    APP_ERROR_CHECK(littlefs_nrf52_init(&cfg, NULL));
 
 #ifdef SOFTDEVICE_PRESENT
     ble_stack_init();

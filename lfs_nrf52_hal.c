@@ -51,12 +51,12 @@
 #define LFS_NRF52_PROG_SIZE 16
 #endif
 
-#ifndef LFS_NRF52_PAGE_SIZE
-#define LFS_NRF52_PAGE_SIZE 4096
+#ifndef LFS_NRF52_BLOCK_SIZE
+#define LFS_NRF52_BLOCK_SIZE 4096
 #endif
 
-#ifndef LFS_NRF52_PAGE_COUNT
-#define LFS_NRF52_PAGE_COUNT 2
+#ifndef LFS_NRF52_BLOCK_COUNT
+#define LFS_NRF52_BLOCK_COUNT 2
 #endif
 
 #ifndef LFS_NRF52_LOOKAHEAD_SIZE
@@ -118,17 +118,28 @@ static wdt_feed hal_wdt_feed = NULL;
 
 /*======= Global function implementations ===================================*/
 
-void littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl)
+uint32_t littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl)
 {
+    uint32_t err;
+
+    if (NULL == c)
+    {
+        return NRF_ERROR_INVALID_PARAM;
+    }
+
     hal_wdt_feed = wdt_feed_impl;
+    memset(c, 0, sizeof(struct lfs_config));
 
     // Init nRF fstorage
 #ifdef SOFTDEVICE_PRESENT
-    uint32_t ret = nrf_fstorage_init(&fstorage_instance, &nrf_fstorage_sd, NULL);
+    err = nrf_fstorage_init(&fstorage_instance, &nrf_fstorage_sd, NULL);
 #else
-    uint32_t ret = nrf_fstorage_init(&fstorage_instance, &nrf_fstorage_nvmc, NULL);
+    err = nrf_fstorage_init(&fstorage_instance, &nrf_fstorage_nvmc, NULL);
 #endif
-    APP_ERROR_CHECK(ret);
+    if (err)
+    {
+        return err;
+    }
 
     // Flash operations
     c->read = lfs_api_read;
@@ -139,8 +150,8 @@ void littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl)
     // Parameters:
     c->read_size = LFS_NRF52_READ_SIZE;
     c->prog_size = LFS_NRF52_PROG_SIZE;
-    c->block_size = LFS_NRF52_PAGE_SIZE;
-    c->block_count = LFS_NRF52_PAGE_COUNT;
+    c->block_size = LFS_NRF52_BLOCK_SIZE;
+    c->block_count = LFS_NRF52_BLOCK_COUNT;
     c->cache_size = LFS_NRF52_CACHE_SIZE;
     c->lookahead_size = LFS_NRF52_LOOKAHEAD_SIZE;
     c->block_cycles = LFS_NRF52_BLOCK_CYCLES;
@@ -151,7 +162,11 @@ void littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl)
     c->prog_buffer = littlefs_prog_buffer;
     c->lookahead_buffer = littlefs_lookahead_buffer;
 #else
-    nrf_mem_init();
+    err = nrf_mem_init();
+    if (err)
+    {
+        return err;
+    }
 #endif
 
     // Optional parameters
@@ -167,6 +182,8 @@ void littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl)
 #ifdef LFS_NRF52_METADATA_MAX
     c->metadata_max = LFS_NRF52_METADATA_MAX;
 #endif
+
+    return NRF_SUCCESS;
 }
 
 // From lfs_util.c

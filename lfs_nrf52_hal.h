@@ -36,13 +36,16 @@ typedef void (*wdt_feed)(void);
  * @note This function also populates the littlefs config struct which should be
  *       passed to the littlefs API.
  *
- * @param[out] c             littlefs config struct. This should be zero when
- *                           this function is called.
+ * @param[out] c             littlefs config struct.
  * @param[in] wdt_feed_impl  Optional watchdog feed function that the API will
  *                           call when waiting for the fstorage to finish its
  *                           operation. Can be NULL.
+ *
+ * @retval  NRF_SUCCESS    No errors were encountered
+ * @retval  NRF_ERROR_XYZ  Some error was encountered when initalizing the hal
+ *                         implementation.
  */
-void littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl);
+uint32_t littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl);
 
 #ifdef __cplusplus
 }
