@@ -27,10 +27,6 @@
 #include "nrf_fstorage_nvmc.h"
 #endif
 
-#ifndef LFS_NO_MALLOC
-#include "mem_manager.h"
-#endif
-
 /*======= Local Macro Definitions ===========================================*/
 
 #ifndef LFS_NRF5_START_ADDR

@@ -6,7 +6,7 @@ This repository includes an implementation for the hardware abstracted parts of 
 
 This section discusses the features and limitations of this implementation.
 ### Memory
-The implementation supports both dynamic and static memory allocation. The default behavior is using dynamic memory. Defining `LFS_NO_MALLOC` in your project ensures that only static memory is used. For dynamic memory, the implementation uses the memory manger in the nRF5 SDK.
+The implementation supports both dynamic and static memory allocation. The default behavior is using dynamic memory. Defining `LFS_NO_MALLOC` in your project ensures that only static memory is used. For dynamic memory, the implementation uses the memory manger in the nRF5 SDK. The user must initialize the mem_manager before using littlefs if dynamic memory is being used.
 
 ### SoftDevice
 The implementation supports running with the SoftDevice. This is automatically handled in the implementation. The user should just define `SOFTDEVICE_PRESENT` in their project if there is a SoftDevice present.

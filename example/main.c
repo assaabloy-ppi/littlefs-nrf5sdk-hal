@@ -29,6 +29,11 @@
 #include "lfs_nrf5_hal.h"
 #include "lfs.h"
 
+#ifndef LFS_NO_MALLOC
+#include "mem_manager.h"
+#endif
+
+
 /*======= Local Macro Definitions ===========================================*/
 
 // littlefs parameters:
