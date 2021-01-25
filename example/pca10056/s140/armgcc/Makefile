@@ -54,7 +54,7 @@ SRC_FILES += \
   $(SDK_ROOT)/external/segger_rtt/SEGGER_RTT_printf.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_rtt.c \
   $(SDK_ROOT)/components/libraries/log/src/nrf_log_backend_serial.c \
-  $(PROJ_DIR)/lfs_nrf52_hal.c \
+  $(PROJ_DIR)/lfs_nrf5_hal.c \
   $(PROJ_DIR)/littlefs/lfs.c \
   $(SDK_ROOT)/components/libraries/mem_manager/mem_manager.c \
 
@@ -108,7 +108,7 @@ OPT = -O3 -g3
 # C flags common to all targets
 CFLAGS += $(OPT)
 CFLAGS += -DLFS_NO_MALLOC  # No dynamic memory
-CFLAGS += -DLFS_CONFIG=lfs_nrf52_config.h
+CFLAGS += -DLFS_CONFIG=lfs_nrf5_config.h
 CFLAGS += -DDEBUG
 CFLAGS += -DAPP_TIMER_V2
 CFLAGS += -DAPP_TIMER_V2_RTC1_ENABLED

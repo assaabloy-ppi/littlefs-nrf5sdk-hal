@@ -16,7 +16,7 @@
 
 /*======= Includes ==========================================================*/
 
-#include "lfs_nrf52_hal.h"
+#include "lfs_nrf5_hal.h"
 #include "lfs.h"
 #include "lfs_util.h"
 #include "nrf_fstorage.h"
@@ -33,38 +33,12 @@
 
 /*======= Local Macro Definitions ===========================================*/
 
-// littlefs parameters:
-
-#ifndef LFS_NRF52_START_ADDR
-#define LFS_NRF52_START_ADDR 0x3e000
+#ifndef LFS_NRF5_START_ADDR
+#define LFS_NRF5_START_ADDR 0x3e000
 #endif
 
-#ifndef LFS_NRF52_END_ADDR
-#define LFS_NRF52_END_ADDR 0x3ffff
-#endif
-
-#ifndef LFS_NRF52_READ_SIZE
-#define LFS_NRF52_READ_SIZE 16
-#endif
-
-#ifndef LFS_NRF52_PROG_SIZE
-#define LFS_NRF52_PROG_SIZE 16
-#endif
-
-#ifndef LFS_NRF52_BLOCK_SIZE
-#define LFS_NRF52_BLOCK_SIZE 4096
-#endif
-
-#ifndef LFS_NRF52_BLOCK_COUNT
-#define LFS_NRF52_BLOCK_COUNT 2
-#endif
-
-#ifndef LFS_NRF52_LOOKAHEAD_SIZE
-#define LFS_NRF52_LOOKAHEAD_SIZE 16
-#endif
-
-#ifndef LFS_NRF52_BLOCK_CYCLES
-#define LFS_NRF52_BLOCK_CYCLES 500
+#ifndef LFS_NRF5_END_ADDR
+#define LFS_NRF5_END_ADDR 0x3ffff
 #endif
 
 // Internal definitions
@@ -102,15 +76,9 @@ static void wait_for_cb(void);
 NRF_FSTORAGE_DEF(nrf_fstorage_t fstorage_instance) =
 {
     .evt_handler = fstorage_evt_handler,
-    .start_addr = LFS_NRF52_START_ADDR,
-    .end_addr   = LFS_NRF52_END_ADDR,
+    .start_addr = LFS_NRF5_START_ADDR,
+    .end_addr   = LFS_NRF5_END_ADDR,
 };
-
-#ifdef LFS_NO_MALLOC
-static uint8_t littlefs_read_buffer[LFS_NRF52_CACHE_SIZE];
-static uint8_t littlefs_prog_buffer[LFS_NRF52_CACHE_SIZE];
-static uint8_t littlefs_lookahead_buffer[LFS_NRF52_CACHE_SIZE];
-#endif
 
 static volatile int flash_op_ret = LFS_NRF52_ERR_WAIT_VALUE;
 
@@ -128,7 +96,6 @@ uint32_t littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl)
     }
 
     hal_wdt_feed = wdt_feed_impl;
-    memset(c, 0, sizeof(struct lfs_config));
 
     // Init nRF fstorage
 #ifdef SOFTDEVICE_PRESENT
@@ -146,42 +113,6 @@ uint32_t littlefs_nrf52_init(struct lfs_config *c, wdt_feed wdt_feed_impl)
     c->prog = lfs_api_prog;
     c->erase = lfs_api_erase;
     c->sync = lfs_api_sync;
-
-    // Parameters:
-    c->read_size = LFS_NRF52_READ_SIZE;
-    c->prog_size = LFS_NRF52_PROG_SIZE;
-    c->block_size = LFS_NRF52_BLOCK_SIZE;
-    c->block_count = LFS_NRF52_BLOCK_COUNT;
-    c->cache_size = LFS_NRF52_CACHE_SIZE;
-    c->lookahead_size = LFS_NRF52_LOOKAHEAD_SIZE;
-    c->block_cycles = LFS_NRF52_BLOCK_CYCLES;
-
-#ifdef LFS_NO_MALLOC
-    // Static buffers
-    c->read_buffer = littlefs_read_buffer;
-    c->prog_buffer = littlefs_prog_buffer;
-    c->lookahead_buffer = littlefs_lookahead_buffer;
-#else
-    err = nrf_mem_init();
-    if (err)
-    {
-        return err;
-    }
-#endif
-
-    // Optional parameters
-#ifdef LFS_NRF52_NAME_MAX
-    c->name_max = LFS_NRF52_NAME_MAX;
-#endif
-#ifdef LFS_NRF52_FILE_MAX
-    c->file_max = LFS_NRF52_FILE_MAX;
-#endif
-#ifdef LFS_NRF52_ATTR_MAX
-    c->attr_max = LFS_NRF52_ATTR_MAX;
-#endif
-#ifdef LFS_NRF52_METADATA_MAX
-    c->metadata_max = LFS_NRF52_METADATA_MAX;
-#endif
 
     return NRF_SUCCESS;
 }
@@ -212,7 +143,7 @@ static int lfs_api_read(const struct lfs_config *c,
                         lfs_off_t off, void *buffer,
                         lfs_size_t size)
 {
-    uint32_t offset = (LFS_NRF52_START_ADDR) + (block * c->block_size) + off;
+    uint32_t offset = (LFS_NRF5_START_ADDR) + (block * c->block_size) + off;
     uint32_t err = nrf_fstorage_read(&fstorage_instance, offset, buffer, size);
     if (!err)
     {
@@ -226,7 +157,7 @@ static int lfs_api_prog(const struct lfs_config *c,
                         lfs_off_t off, const void *buffer,
                         lfs_size_t size)
 {
-    uint32_t offset = (LFS_NRF52_START_ADDR) + (block * c->block_size) + off;
+    uint32_t offset = (LFS_NRF5_START_ADDR) + (block * c->block_size) + off;
     uint32_t err = nrf_fstorage_write(&fstorage_instance,
                                       offset,
                                       buffer,
@@ -244,7 +175,7 @@ static int lfs_api_prog(const struct lfs_config *c,
 
 static int lfs_api_erase(const struct lfs_config *c, lfs_block_t block)
 {
-    uint32_t offset = (LFS_NRF52_START_ADDR) + (block * c->block_size);
+    uint32_t offset = (LFS_NRF5_START_ADDR) + (block * c->block_size);
     uint32_t err = nrf_fstorage_erase(&fstorage_instance,
                                       offset,
                                       N_PAGES_TO_ERASE,

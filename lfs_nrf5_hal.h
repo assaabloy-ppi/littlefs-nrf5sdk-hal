@@ -17,12 +17,6 @@ extern "C" {
 #include "lfs.h"
 
 /*======= Public macro definitions ==========================================*/
-
-
-#ifndef LFS_NRF52_CACHE_SIZE
-#define LFS_NRF52_CACHE_SIZE 16
-#endif
-
 /*======= Type Definitions and declarations =================================*/
 
 typedef void (*wdt_feed)(void);
@@ -33,8 +27,8 @@ typedef void (*wdt_feed)(void);
 /**
  * @brief Initialize the littlefs hal implementation.
  *
- * @note This function also populates the littlefs config struct which should be
- *       passed to the littlefs API.
+ * This function populates the low level flash operation function pointers of
+ * the littlefs config struct.
  *
  * @param[out] c             littlefs config struct.
  * @param[in] wdt_feed_impl  Optional watchdog feed function that the API will
